@@ -1,0 +1,12 @@
+{
+  "user": {
+    "name": "wataru0225",
+    "age": 25,
+    "posts": [
+      "golang",
+      "arch linux",
+      "nixos",
+      "ruby"
+    ]
+  }
+}
