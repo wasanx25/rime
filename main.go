@@ -6,29 +6,55 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"path"
 	"path/filepath"
 )
 
 func main() {
-	var jsonPath = flag.String("path", "", "select json file path")
+	var dirPath = flag.String("dir", "./", "select json files directory")
 	var port = flag.Int("port", 8080, "select port number")
 	flag.Parse()
 
-	if len(*jsonPath) == 0 {
+	if len(*dirPath) == 0 {
 		log.Fatal("You must set json file path.")
 	}
 
-	bytes, err := ioutil.ReadFile(*jsonPath)
+	jsonFiles := getFiles(*dirPath)
+
+	log.Printf("http://localhost:%d\n", *port)
+	var urlPath string
+	for _, file := range jsonFiles {
+		bytes, err := ioutil.ReadFile(file)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		urlPath = filepath.Join("/", file)
+		log.Printf("See browse -> http://localhost:%d%s", *port, urlPath)
+
+		http.HandleFunc(urlPath, func(w http.ResponseWriter, r *http.Request) {
+			fmt.Fprintln(w, string(bytes))
+		})
+	}
+
+	http.ListenAndServe(fmt.Sprintf(":%d", *port), nil)
+}
+
+func getFiles(dir string) []string {
+	files, err := ioutil.ReadDir(dir)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	urlPath := filepath.Join("/", filepath.Base(*jsonPath))
-
-	log.Printf("http://localhost:%d\n", *port)
-	log.Printf("See browse -> http://localhost:%d%s", *port, urlPath)
-	http.HandleFunc(urlPath, func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, string(bytes))
-	})
-	http.ListenAndServe(fmt.Sprintf(":%d", *port), nil)
+	var paths []string
+	for _, file := range files {
+		if file.IsDir() {
+			paths = append(paths, getFiles(filepath.Join(dir, file.Name()))...)
+			continue
+		}
+		if path.Ext(file.Name()) == ".json" {
+			paths = append(paths, filepath.Join(dir, file.Name()))
+		}
+	}
+	return paths
 }
