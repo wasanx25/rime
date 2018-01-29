@@ -18,6 +18,11 @@ $ rime --dir JSON_DIR
 ## Options
 
 ```
---dir string select json files directory
---port int select port number
+Usage of rime:
+--dir string  select json files directory
+--port int    select port number
 ```
+
+## Links
+
+- [Goでjsonファイルを読み込んでHTTPで表示する](http://wataru0225.hateblo.jp/entry/2018/01/26/221512)
