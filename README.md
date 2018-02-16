@@ -19,8 +19,9 @@ $ rime --dir JSON_DIR
 
 ```
 Usage of rime:
---dir string  select json files directory
---port int    select port number
+-d, --dir string   Please select json files directory. (default "./")
+    --noext        Please select if you need not to extenstion(.json).
+-p, --port int     Please select if you want to use other port number except for 8080. (default 8080)
 ```
 
 ## Links
