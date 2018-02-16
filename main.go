@@ -1,19 +1,20 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"path"
 	"path/filepath"
+
+	flag "github.com/spf13/pflag"
 )
 
 func main() {
-	var dirPath = flag.String("dir", "./", "select json files directory")
-	var port = flag.Int("port", 8080, "select port number")
-	var noExt = flag.Bool("ext", false, "select yes or no extension flag")
+	var dirPath = flag.StringP("dir", "d", "./", "Please select json files directory.")
+	var port = flag.IntP("port", "p", 8080, "Please select if you want to use other port number except for 8080.")
+	var noExt = flag.Bool("noext", false, "Please select if you need not to extenstion(.json).")
 	flag.Parse()
 
 	if len(*dirPath) == 0 {
