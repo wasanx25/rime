@@ -13,6 +13,7 @@ import (
 func main() {
 	var dirPath = flag.String("dir", "./", "select json files directory")
 	var port = flag.Int("port", 8080, "select port number")
+	var noExt = flag.Bool("ext", false, "select yes or no extension flag")
 	flag.Parse()
 
 	if len(*dirPath) == 0 {
@@ -29,6 +30,10 @@ func main() {
 			log.Fatal(err)
 		}
 
+		if *noExt {
+			count := len(file[:len(file)-len(filepath.Ext(file))])
+			file = file[0:count]
+		}
 		urlPath = filepath.Join("/", file)
 		log.Printf("See browse -> http://localhost:%d%s", *port, urlPath)
 
